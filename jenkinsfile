@@ -5,9 +5,9 @@ pipeline {
     // Define environment variables that will be available throughout the pipeline
     environment {
         // Defines the Docker image name and tags it with the Jenkins build number
-        DOCKER_IMAGE = "cicd-demo-app:${env.BUILD_NUMBER}"
+        DOCKER_IMAGE = "node-demo-app:${env.BUILD_NUMBER}"
         // Defines the name for the running Docker container
-        CONTAINER_NAME = "cicd-demo-container"
+        CONTAINER_NAME = "node-demo-container"
     }
 
     // Define the stages of your CI/CD pipeline
