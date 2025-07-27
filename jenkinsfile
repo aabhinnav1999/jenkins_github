@@ -79,20 +79,20 @@ pipeline {
             }
         }
 
-//         stage('Run Docker Container') {
-//             steps {
-//                 echo "--- Running new Docker container ---"
-//                 script {
-//                     // Runs the new Docker container
-//                     // '-d': runs in detached mode (in the background)
-//                     // '-p 3000:3000': maps port 3000 from the container to port 3000 on the Jenkins agent host
-//                     // '--name': assigns a specific name to the container
-//                     sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
-//                 }
-//                 echo "New container ${CONTAINER_NAME} running on port 3000."
-//             }
-//         }
-//     }
+        stage('Run Docker Container') {
+            steps {
+                echo "--- Running new Docker container ---"
+                script {
+                    // Runs the new Docker container
+                    // '-d': runs in detached mode (in the background)
+                    // '-p 3000:3000': maps port 3000 from the container to port 3000 on the Jenkins agent host
+                    // '--name': assigns a specific name to the container
+                    sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
+                }
+                echo "New container ${CONTAINER_NAME} running on port 3000."
+            }
+        }
+    }
 
 //     // Post-build actions (optional, but good for cleanup or notifications)
 //     post {
