@@ -1,0 +1,3 @@
+install docker
+install java
+Set the permissions on /var/run/docker.sock => chmod 777 /var/run/docker.sock
