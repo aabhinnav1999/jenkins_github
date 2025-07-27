@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
         <div class="container">
             <h1>Hello CI/CD!</h1>
             <p>This is version <strong>${appVersion}</strong> of the demo application.</p>
-            <p>Deployed automatically via Jenkins and GitLab.</p>
+            <p>Deployed automatically via Jenkins and GitHub.</p>
         </div>
     </body>
     </html>
