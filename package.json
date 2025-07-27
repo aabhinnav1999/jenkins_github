@@ -1,7 +1,7 @@
 {
   "name": "cicd-demo-app",
   "version": "1.0.0",
-  "description": "A simple Node.js app for CI/CD demo with Jenkins and GitHUb",
+  "description": "A simple Node.js app for CI/CD demo with Jenkins and GitHub",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

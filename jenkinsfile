@@ -11,20 +11,18 @@ pipeline {
     }
 
     // Define the stages of your CI/CD pipeline
-    // stages {
-    //     stage('Checkout Code') {
-    //         steps {
-    //             echo "--- Checking out code from GitLab ---"
-    //             // Clones the Git repository.
-    //             // 'branch': Specifies the branch to clone (e.g., 'main' or 'master')
-    //             // 'credentialsId': ID of the credentials configured in Jenkins for GitLab access
-    //             // 'url': The URL of your GitLab repository
-    //             git branch: 'main', 
-    //                 credentialsId: 'gitlab', // <<--- IMPORTANT: REPLACE THIS
-    //                 url: 'https://gitlab.com/dgruploads/Gitlab_Jenkins_collab.git' // <<--- IMPORTANT: REPLACE THIS
-    //             echo "Code checked out successfully."
-    //         }
-    //     }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo "--- Checking out code from GitHub ---"
+                // Clones the Git repository.
+                // 'branch': Specifies the branch to clone (e.g., 'main' or 'master')
+                // 'credentialsId': ID of the credentials configured in Jenkins for GitHub access
+                // 'url': The URL of your GitHub repository
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/aabhinnav1999/jenkins_github']])
+                echo "Code checked out successfully."
+            }
+        }
 
 //         stage('Build Docker Image') {
 //             steps {
