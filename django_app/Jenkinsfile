@@ -7,13 +7,13 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('1.Checkout Code') {
             steps {
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/aabhinnav1999/jenkins_github']])
             }
         }
 
-        stage('Build Docker Image') {
+        stage('2.Build Docker Image') {
             steps {
                 echo "--- Building Docker image ---"
                 script {
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('3.Login to Docker Hub') {
             steps {
                 echo "--- Logging in to Docker Hub ---"
                 script {
@@ -34,6 +34,21 @@ pipeline {
                     }
                 }
                 echo "Logged in to Docker Hub."
+            }
+        }
+
+        stage('Tag and Push Docker Image to Docker Hub') {
+            steps {
+                echo "--- Tagging the Docker image ---"
+                script {
+                    sh "docker image tag ${DOCKER_IMAGE} aabhinnavdocker/${DOCKER_IMAGE}"
+                }
+
+                echo "--- Pushing Docker image to Docker Hub ---"
+                script {
+                    sh "docker image push aabhinnavdocker/${DOCKER_IMAGE}"
+                }
+                echo "Docker image ${DOCKER_IMAGE} pushed to Docker Hub."
             }
         }
 
