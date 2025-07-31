@@ -1,0 +1,16 @@
+pipeline {
+    agent { label 'my_server'}
+
+    environment {
+        DOCKER_IMAGE = "node-demo-app:${env.BUILD_NUMBER}"
+        CONTAINER_NAME = "node-demo-container"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/aabhinnav1999/jenkins_github']])
+            }
+        }
+    }
+}
