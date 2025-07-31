@@ -25,5 +25,17 @@ pipeline {
             }
         }
 
+        stage('Login to Docker Hub') {
+            steps {
+                echo "--- Logging in to Docker Hub ---"
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin'
+                    }
+                }
+                echo "Logged in to Docker Hub."
+            }
+        }
+
     }
 }
