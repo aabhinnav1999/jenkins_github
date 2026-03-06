@@ -1,6 +1,6 @@
-FROM python
+FROM python:3.13-slim
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 # Set the working directory inside the container
 WORKDIR /app

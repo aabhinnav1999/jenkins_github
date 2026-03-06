@@ -2,14 +2,13 @@ pipeline {
     agent { label 'my_server'}
 
     environment {
-        DOCKER_IMAGE = "django-demo-app:${env.BUILD_NUMBER}"
-        CONTAINER_NAME = "django-demo-container"
+        DOCKER_IMAGE = "jenkins_django:${env.BUILD_NUMBER}"
     }
 
     stages {
         stage('1.Checkout Code') {
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/aabhinnav1999/jenkins_github']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/aabhinnav1999/jenkins_github.git']])
             }
         }
 
@@ -37,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('Tag and Push Docker Image to Docker Hub') {
+        stage('4. Tag and Push Docker Image to Docker Hub') {
             steps {
                 echo "--- Tagging the Docker image ---"
                 script {
@@ -51,26 +50,5 @@ pipeline {
                 echo "Docker image ${DOCKER_IMAGE} pushed to Docker Hub."
             }
         }
-
-        stage('Stop and Remove Old Container (if exists)') {
-            steps {
-                echo "--- Stopping and removing old container (if present) ---"
-                script {
-                    sh "docker rm -f ${CONTAINER_NAME} || true"
-                }
-                echo "Old container removed."
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                echo "--- Running new Docker container ---"
-                script {
-                    sh "docker run -d -p 80:8000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
-                }
-                echo "New container ${CONTAINER_NAME} running on port 80."
-            }
-        }
-
     }
 }
