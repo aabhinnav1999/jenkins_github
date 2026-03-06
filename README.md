@@ -2,11 +2,11 @@
 
 ### On Agent Node
 
-Install docker
+1. Install docker
 
-Install java
+2. Install java
 
-Set the permissions on /var/run/docker.sock => chmod 777 /var/run/docker.sock
+3. Set the permissions on /var/run/docker.sock => chmod 777 /var/run/docker.sock
 ```bash
 sudo chmod 777 /var/run/docker.sock
 ```
