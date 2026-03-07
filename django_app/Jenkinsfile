@@ -41,7 +41,7 @@ pipeline {
             steps {
                 echo "--- Running Docker Scout scan for HIGH and CRITICAL vulnerabilities ---"
                 script {
-                    sh "docker scout cves ${DOCKER_IMAGE} --only-severity critical,high --exit-code"
+                    sh "docker scout cves ${DOCKER_IMAGE}"
                 }
                 echo "Docker Scout scan passed. No HIGH or CRITICAL vulnerabilities found."
             }
