@@ -5,26 +5,25 @@ pipeline {
     // Define environment variables that will be available throughout the pipeline
     environment {
         // Defines the Docker image name and tags it with the Jenkins build number
-        DOCKER_IMAGE = "node-demo-app:${env.BUILD_NUMBER}"
-        // Defines the name for the running Docker container
-        CONTAINER_NAME = "node-demo-container"
+        DOCKER_IMAGE = "jenkins_node:${env.BUILD_NUMBER}"
+        DOCKER_USERNAME = "aabhinnavdocker" // Replace with your Docker Hub username
     }
 
     // Define the stages of your CI/CD pipeline
     stages {
-        stage('Checkout Code') {
+        stage('1.Checkout Code') {
             steps {
                 echo "--- Checking out code from GitHub ---"
                 // Clones the Git repository.
                 // 'branch': Specifies the branch to clone (e.g., 'main' or 'master')
                 // 'credentialsId': ID of the credentials configured in Jenkins for GitHub access
                 // 'url': The URL of your GitHub repository
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/aabhinnav1999/jenkins_github']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/aabhinnav1999/jenkins_github.git']])
                 echo "Code checked out successfully."
             }
         }
 
-        stage('Build Docker Image') {
+        stage('2.Build Docker Image') {
             steps {
                 echo "--- Building Docker image ---"
                 script {
@@ -39,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('3.Login to Docker Hub') {
             steps {
                 echo "--- Logging in to Docker Hub ---"
                 script {
@@ -53,69 +52,35 @@ pipeline {
             }
         }
 
-        stage('Tag and Push Docker Image to Docker Hub') {
+        stage('4.Tag and Push Docker Image to Docker Hub') {
             steps {
                 echo "--- Tagging the Docker image ---"
                 script {
-                    sh "docker image tag ${DOCKER_IMAGE} aabhinnavdocker/${DOCKER_IMAGE}"
+                    sh "docker image tag ${DOCKER_IMAGE} ${DOCKER_USERNAME}/${DOCKER_IMAGE}"
                 }
 
                 echo "--- Pushing Docker image to Docker Hub ---"
                 script {
                     // Pushes the built image to Docker Hub
-                    sh "docker image push aabhinnavdocker/${DOCKER_IMAGE}"
+                    sh "docker image push ${DOCKER_USERNAME}/${DOCKER_IMAGE}"
                 }
                 echo "Docker image ${DOCKER_IMAGE} pushed to Docker Hub."
             }
-        }
+        }  
+    }
 
-        stage('Stop and Remove Old Container (if exists)') {
-            steps {
-                echo "--- Stopping and removing old container (if present) ---"
-                script {
-                    // Stops and removes the existing container with the same name
-                    // '|| true' ensures the command doesn't fail the pipeline if the container doesn't exist
-                    sh "docker rm -f ${CONTAINER_NAME} || true"
-                }
-                echo "Old container removed."
-            }
+    post {
+        success {
+            echo "Pipeline completed successfully."
         }
-
-        stage('Run Docker Container') {
-            steps {
-                echo "--- Running new Docker container ---"
-                script {
-                    // Runs the new Docker container
-                    // '-d': runs in detached mode (in the background)
-                    // '-p 3000:3000': maps port 3000 from the container to port 3000 on the Jenkins agent host
-                    // '--name': assigns a specific name to the container
-                    sh "docker run -d -p 3000:3000 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
-                }
-                echo "New container ${CONTAINER_NAME} running on port 3000."
-            }
+        failure {
+            echo "Pipeline failed. Image was not pushed because build/scan did not pass."
+        }
+        always {
+            echo "--- Cleaning up local images ---"
+            sh """docker image rm -f ${DOCKER_IMAGE} || true 
+            docker image rm -f ${DOCKER_USERNAME}/${DOCKER_IMAGE} || true"""
         }
     }
-    
-
-//     // Post-build actions (optional, but good for cleanup or notifications)
-//     post {
-//         always {
-//             echo "Pipeline finished. Build status: ${currentBuild.result}"
-//             // Example cleanup: remove the Docker image after a successful build
-//             // (You might want to keep images for a while in a real scenario)
-//             // script {
-//             //     sh "docker rmi ${DOCKER_IMAGE} || true"
-//             // }
-//         }
-//         success {
-//             echo "Pipeline executed successfully!"
-//             // You could add a step here to send a success notification to Slack/email
-//         }
-//         failure {
-//             echo "Pipeline failed!"
-//             // You could add a step here to send a failure notification
-//         }
-    // }
-
 
 }

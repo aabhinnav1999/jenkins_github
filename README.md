@@ -4,7 +4,7 @@
 1. Install Java
 2. Install Jenkins
 
-   :link: <a target="_blank" >https://www.jenkins.io/doc/book/installing/</a>  
+   :link: <a>https://www.jenkins.io/doc/book/installing/</a>  
 
 3. Go to manage jenkins (⚙️ Icon), select nodes and add worker node
 
