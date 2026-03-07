@@ -43,7 +43,6 @@ pipeline {
                 script {
                     sh "docker scout cves ${DOCKER_IMAGE}"
                 }
-                echo "Docker Scout scan passed. No HIGH or CRITICAL vulnerabilities found."
             }
         }
 
