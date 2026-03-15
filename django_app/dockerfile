@@ -1,20 +1,16 @@
-FROM python:3.13-slim
-
-ENV PYTHONUNBUFFERED=1
-
-# Set the working directory inside the container
+FROM python:3.12-alpine AS builder
 WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt --target=/app/deps
+COPY manage.py .
+COPY initial_setup.py .
+COPY jenkins_project ./jenkins_project
+COPY myapp ./myapp
 
-# Copy requirements.txt to the working directory
-COPY requirements.txt ./
-
-# Install application dependencies
-RUN pip install --no-cache-dir -r requirements.txt  
-
-# Copy the rest of the application code
-COPY . .    
-# Expose the port the app runs on
-EXPOSE 8000 
-
-# Command to run the application
-CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+FROM gcr.io/distroless/python3:nonroot
+WORKDIR /app
+ENV PYTHONPATH=/app/deps
+ENV PYTHONUNBUFFERED=1
+COPY --from=builder /app /app
+EXPOSE 8000
+CMD [ "initial_setup.py" ]

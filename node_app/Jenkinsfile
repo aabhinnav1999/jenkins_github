@@ -74,7 +74,7 @@ pipeline {
             echo "Pipeline completed successfully."
         }
         failure {
-            echo "Pipeline failed. Image was not pushed because build/scan did not pass."
+            echo "Pipeline failed. Image was not pushed because build/scan did not pass"
         }
         always {
             echo "--- Cleaning up local images ---"
